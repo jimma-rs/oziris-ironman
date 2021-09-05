@@ -8,7 +8,6 @@ import {
 } from "../types/GuideSection";
 import {ParseGuide, ParseGuideFromJson} from "./GuideParser";
 import {Accordion, Checkbox} from "semantic-ui-react";
-import _ from "lodash";
 
 interface State {
     guideText: GuideSections
@@ -53,17 +52,24 @@ export class Guide extends Component<Props, State> {
         return line.type === LineType.Note
     }
 
+    snakeCase(string: string) {
+        return string.replace(/\d+/g, ' ')
+            .split(/ |\B(?=[A-Z])/)
+            .map((word) => word.toLowerCase())
+            .join('_');
+    }
+
     generateLines(lines: GuideLine[]) {
 
         return lines.map((line: GuideLine) => {
                 if (line.isTask()) {
-                    return <p><Checkbox checked={line.checked} key={_.snakeCase(line.text)} label={line.text}
+                    return <p><Checkbox checked={line.checked} key={this.snakeCase(line.text)} label={line.text}
                                         onClick={() => {
                                             this.onCheckboxCheck(line.index)
                                         }}/></p>
                 }
                 if (line.isNote()) {
-                    return (<p key={_.snakeCase(line.text)} className={'note'}>- {line.text}</p>)
+                    return (<p key={this.snakeCase(line.text)} className={'note'}>- {line.text}</p>)
                 }
                 return <></>
             }
@@ -77,7 +83,7 @@ export class Guide extends Component<Props, State> {
                     return (<>{this.generateLines(subSection.lines)}</>)
                 }
                 return {
-                    key: `panel-${_.snakeCase(subSection.header)}-${subSection.lines.length}`,
+                    key: `panel-${this.snakeCase(subSection.header)}-${subSection.lines.length}`,
                     title: subSection.header,
                     active: subSection.active,
                     onTitleClick: () => {
@@ -95,7 +101,7 @@ export class Guide extends Component<Props, State> {
 
     createPanels() {
         return this.state.guideText.sections.map(sections => ({
-            key: `panel-${_.snakeCase(sections.header)}`,
+            key: `panel-${this.snakeCase(sections.header)}`,
             title: sections.header,
             active: sections.active,
             onTitleClick: () => {
