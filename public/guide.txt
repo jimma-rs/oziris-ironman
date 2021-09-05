@@ -1,7 +1,10 @@
 // ! = Section accordian
 // # = Header
-// - = Checkbox line
+// - = Task line
 // ? = Additional notes
+// Every task line needs a unique number, this is for remembering what is checked between sessions.
+// If you add a new line pick an unused number
+// If you modify an existing line it will remained checked after the update as long as the number stays the same
 
 !1. Complete walk-through to barrows gloves
 -{1}Start as a female character, don't forget to make yourself an ironman before leaving tutorial island.
