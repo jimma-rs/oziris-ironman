@@ -22,7 +22,6 @@ export class Guide extends Component<Props, State> {
         super(props);
         const localStorageState = localStorage.getItem('GuideState')
         const initialGuideState = localStorageState ? ParseGuideFromJson(JSON.parse(localStorageState)) : new GuideSections([])
-        debugger;
         this.state = {
             guideText: initialGuideState,
         }
@@ -58,10 +57,10 @@ export class Guide extends Component<Props, State> {
 
         return lines.map((line: GuideLine) => {
                 if (line.isTask()) {
-                    debugger;
-                    return <p><Checkbox checked={line.checked} key={_.snakeCase(line.text)} label={line.text} onClick={() => {
-                        this.onCheckboxCheck(line.index)
-                    }}/></p>
+                    return <p><Checkbox checked={line.checked} key={_.snakeCase(line.text)} label={line.text}
+                                        onClick={() => {
+                                            this.onCheckboxCheck(line.index)
+                                        }}/></p>
                 }
                 if (line.isNote()) {
                     return (<p key={_.snakeCase(line.text)} className={'note'}>- {line.text}</p>)
@@ -80,6 +79,12 @@ export class Guide extends Component<Props, State> {
                 return {
                     key: `panel-${_.snakeCase(subSection.header)}-${subSection.lines.length}`,
                     title: subSection.header,
+                    active: subSection.active,
+                    onTitleClick: () => {
+                        subSection.active = !subSection.active;
+                        this.setState({guideText: this.state.guideText})
+                        localStorage.setItem('GuideState', JSON.stringify(this.state.guideText));
+                    },
                     content: {
                         content: (<>{this.generateLines(subSection.lines)}</>)
                     }
@@ -92,6 +97,12 @@ export class Guide extends Component<Props, State> {
         return this.state.guideText.sections.map(sections => ({
             key: `panel-${_.snakeCase(sections.header)}`,
             title: sections.header,
+            active: sections.active,
+            onTitleClick: () => {
+                sections.active = !sections.active;
+                this.setState({guideText: this.state.guideText})
+                localStorage.setItem('GuideState', JSON.stringify(this.state.guideText));
+            },
             content: {content: this.parseSubSectionLines(sections.subSections)}
         }))
     }

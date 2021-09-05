@@ -36,9 +36,9 @@ export function ParseGuideFromJson(json: any): GuideSections {
     const guide: GuideSection[] = [];
 
     json.sections.forEach((section: GuideSection) => {
-        guide.push(new GuideSection(section.header, []))
+        guide.push(new GuideSection(section.header, [], section.active))
         section.subSections.forEach((subSection: GuideSubSection) => {
-            guide[guide.length - 1].subSections.push(new GuideSubSection(subSection.header, []))
+            guide[guide.length - 1].subSections.push(new GuideSubSection(subSection.header, [], subSection.active))
             subSection.lines.forEach((line: GuideLine) => {
                 let guideSubSections = guide[guide.length - 1].subSections;
                 guideSubSections[guideSubSections.length - 1].lines.push(new GuideLine(line.text, line.type, line.index, line.checked))
@@ -46,7 +46,6 @@ export function ParseGuideFromJson(json: any): GuideSections {
             })
         })
     })
-    debugger;
     return new GuideSections(guide);
 }
 
@@ -60,7 +59,7 @@ export async function ParseGuide(): Promise<GuideSections> {
 
             lines.forEach(line => {
                 if (isSectionHeader(line)) {
-                    guide.push(new GuideSection(trimLine(line), []))
+                    guide.push(new GuideSection(trimLine(line), [], false))
                 } else {
                     let guideSection = guide[guide.length - 1];
 
@@ -69,11 +68,11 @@ export async function ParseGuide(): Promise<GuideSections> {
                     }
 
                     if (isSubHeader(line)) {
-                        guideSection.subSections.push(new GuideSubSection(trimLine(line), []))
+                        guideSection.subSections.push(new GuideSubSection(trimLine(line), [], false))
 
                     }
                     if (guideSection.subSections.length === 0) {
-                        guideSection.subSections.push(new GuideSubSection("", []))
+                        guideSection.subSections.push(new GuideSubSection("", [], false))
                     }
 
                     if (isTask(line)) {

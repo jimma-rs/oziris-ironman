@@ -31,20 +31,24 @@ export class GuideSections {
 export class GuideSection {
     header: string;
     subSections: GuideSubSection[];
+    active: boolean;
 
-    constructor(header: string, subSections: GuideSubSection[]) {
+    constructor(header: string, subSections: GuideSubSection[], active: boolean) {
         this.header = header;
         this.subSections = subSections;
+        this.active = active
     }
 }
 
 export class GuideSubSection {
     header: string;
     lines: GuideLine[];
+    active: boolean
 
-    constructor(header: string, lines: GuideLine[]) {
+    constructor(header: string, lines: GuideLine[], active: boolean) {
         this.header = header;
         this.lines = lines;
+        this.active = active;
     }
 }
 
